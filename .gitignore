@@ -1,0 +1,23 @@
+.pio
+.vscode
+venv
+.DS_Store
+build
+*.old
+
+spiffs-paper-s3.bin
+releases/
+
+components/epdiy/.git/
+
+# Untracked compile-time task creds (Phase 5) - never commit real creds
+src/tasks/TasksConfig.local.h
+
+# SD seed file holds real WiFi/Obsidian secrets - never commit. Ship the
+# placeholder template settings.ini.example instead.
+settings.ini
+
+# Freetype SOURCE - only used to rebuild the prebuilt lib_freetype/, not at build time
+externals/
+# epdiy upstream example projects - not part of the firmware build
+components/epdiy/examples/

@@ -1,0 +1,32 @@
+# EpaperOS settings — copy this file to the root of the SD card as settings.ini
+# On boot the device reads settings.ini, saves to NVS, then ignores it next boot.
+# To re-apply (e.g. after NVS erase), keep the file on the card; it always wins.
+# Lines starting with # or ; are ignored. No quotes needed around values.
+#
+# The real settings.ini is gitignored (it holds WiFi/Obsidian secrets). Copy
+# this example to settings.ini and fill in your own values.
+
+# ---- WiFi ----
+wifi_ssid=your-ssid
+wifi_pass=your-wifi-password
+
+# ---- Obsidian Local REST API ----
+# Base URL of the Local REST API plugin (no trailing slash).
+# Example: http://192.168.1.50:27123
+obsidian_url=
+
+# Bearer token from Obsidian -> Local REST API plugin -> security settings.
+obsidian_token=
+
+# Vault-relative path to your tasks note.
+note_path=Tasks.md
+
+# ---- Reader preferences ----
+# Font size in pixels (8-96).
+reader_font_px=22
+
+# Page margin in pixels (0-100).
+reader_margin=10
+
+# Use TrueType font: 1=yes, 0=no.
+reader_use_ttf=1

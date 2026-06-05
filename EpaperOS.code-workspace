@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "s3probe-diy-esp32s3-epub-reader",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
