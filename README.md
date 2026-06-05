@@ -47,6 +47,25 @@ are not maintained here.
   - **Offline** — if no credentials, reads/writes `/fs/Tasks.md` on the SD card
 - Hard either/or by configuration; no local↔remote merge
 
+## Controls
+
+Two physical buttons drive everything — **Boot** (bottom, GPIO0) and **IO48**
+(the side user button) — plus the touch screen. Press patterns:
+
+| Button | Press | Action |
+|---|---|---|
+| **Boot** | short | **Down** — next page / move selection down |
+| **Boot** | double-tap | **Select** — open the reader menu / activate the highlighted item |
+| **Boot** | long hold | **Sleep** (deep sleep) |
+| **Boot** | while asleep | **Wake** |
+| **IO48** | short | **Up** — previous page / move selection up |
+| **IO48** | double-tap | **Full refresh** — full-screen de-ghost redraw |
+| **IO48** | long hold | **Frontlight off** |
+| **IO48 + Boot** | hold IO48, tap Boot | **Cycle frontlight brightness** |
+
+Touch adds tap-to-select, tap zones for page turns, and the on-screen keyboard
+(WiFi/Obsidian entry in Settings, task text in the Tasks app).
+
 ## Build modes
 
 Two PlatformIO environments select what ships. The Tasks app + WiFi stack are
