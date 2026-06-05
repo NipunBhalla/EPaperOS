@@ -1712,8 +1712,12 @@ void draw_status_bar(Renderer *renderer, float voltage, float percentage)
     return;
   }
 
-  // Refresh the clock strings from the system time on every paint.
+#ifdef EPAPEROS_TASKS
+  // Refresh the clock strings from the system time on every paint. A pure reader
+  // has no way to set or keep time (no NTP, no reachable Settings), so it shows
+  // no clock -- only the battery below.
   timesync::format_clock(g_status_time, sizeof(g_status_time), g_status_date, sizeof(g_status_date));
+#endif
 
   // Save margins, zero them so we draw in absolute panel coordinates.
   int s_top = renderer->get_margin_top();
@@ -1737,6 +1741,7 @@ void draw_status_bar(Renderer *renderer, float voltage, float percentage)
   // Wipe the strip so a repaint (e.g. minute tick) does not ghost.
   renderer->fill_rect(0, 0, W, sb_h, 255);
 
+#ifdef EPAPEROS_TASKS
   // Time, left-aligned inside the dead-zone.
   renderer->draw_text(DEADZONE_LEFT, text_y, g_status_time, false, false);
 
@@ -1747,6 +1752,7 @@ void draw_status_bar(Renderer *renderer, float voltage, float percentage)
     dw = 0;
   }
   renderer->draw_text((W - dw) / 2, text_y, g_status_date, false, false);
+#endif // EPAPEROS_TASKS (reader build shows battery only)
 
   // Battery icon + percent, right-aligned. Icon height tracks the font.
   int icon_h = (lh * 3) / 5;

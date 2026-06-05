@@ -1,4 +1,6 @@
 CONFIG_ULP_COPROC_ENABLED=n
-CONFIG_ESP_CONSOLE_UART_CUSTOM=y
-CONFIG_ESP_CONSOLE_USB_CDC=y
-CONFIG_ESP_CONSOLE_UART_NUM=-1
+# UART console. The previous USB-CDC console (esp_usb_console / usb_osglue) is
+# single-core only and fails a static assert on the dual-core ESP32-S3. The full
+# env's committed sdkconfig overrode this to UART; make it the default so the
+# reader env (and any fresh build) gets a console that compiles on the S3.
+CONFIG_ESP_CONSOLE_UART_DEFAULT=y
