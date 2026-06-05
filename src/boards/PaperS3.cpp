@@ -400,7 +400,11 @@ void PaperS3::power_up()
 
 void PaperS3::prepare_to_sleep()
 {
-  // No special handling yet; deep sleep is managed in main.cpp
+  // Safety net: ensure the EPD HV rails (TPS65185) are off before deep sleep.
+  // The renderer already drops them after every refresh, but if we slept right
+  // after a draw without a further flush, force them off here. Leaving them on
+  // drained ~20mA the whole sleep (~12%/12h).
+  epd_poweroff();
 }
 
 Renderer *PaperS3::get_renderer()

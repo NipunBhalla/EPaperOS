@@ -68,9 +68,9 @@ public:
     epd_hl_set_all_white(&m_hl);
     m_frame_buffer = epd_hl_get_framebuffer(&m_hl);
 
-#if !defined(CONFIG_EPD_BOARD_REVISION_LILYGO_T5_47) || defined(BOARD_TYPE_PAPER_S3)
-    epd_poweron();
-#endif
+    // Note: no standing epd_poweron() here. The HV rails are powered up only
+    // around each refresh (flush_display/flush_area/reset) and dropped again, so
+    // the panel never holds the TPS65185 rails on while idle or asleep.
   }
   ~EpdiyRenderer()
   {
@@ -84,7 +84,12 @@ public:
     // GC16 when content explicitly needs grayscale, OR when the partial-update
     // budget is spent (de-ghost). A DU pass adds to the budget; a GC16 clears it.
     bool gray = needs_gray_flush || m_partial_updates >= PARTIAL_REFRESH_LIMIT;
+    // E-paper holds its image with the HV rails off. Power the TPS65185 rails up
+    // only for the duration of the refresh, then drop them. Leaving them on idle
+    // (the previous behaviour) drained ~20mA continuously, even in deep sleep.
+    epd_poweron();
     epd_hl_update_screen(&m_hl, gray ? MODE_GC16 : MODE_DU, temperature);
+    epd_poweroff();
     needs_gray_flush = false;
     if (gray)
     {
@@ -102,18 +107,24 @@ public:
 #endif
     // Partial updates accumulate ghosting; once the budget is spent, promote to
     // a full GC16 clear instead of yet another DU area update.
+    // Power the HV rails up only around the refresh (see flush_display).
+    epd_poweron();
     if (++m_partial_updates >= PARTIAL_REFRESH_LIMIT)
     {
       m_partial_updates = 0;
       epd_hl_update_screen(&m_hl, MODE_GC16, temperature);
+      epd_poweroff();
       return;
     }
     epd_hl_update_area(&m_hl, MODE_DU, temperature, {.x = x, .y = y, .width = width, .height = height});
+    epd_poweroff();
   }
   virtual void reset()
   {
     ESP_LOGI("EPD", "Full clear");
+    epd_poweron();
     epd_fullclear(&m_hl, temperature);
+    epd_poweroff();
     m_partial_updates = 0; // full clear removes all ghosting
   };
   // deep sleep helper - retrieve any state from disk after wake
